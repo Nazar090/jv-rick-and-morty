@@ -12,7 +12,7 @@
       "id": 1,
       "externalId": "1",
       "name": "Rick Sanchez",
-      "status": "Alive",
+      "status": "Alive", 
       "gender": "Male"
     }
     ```
@@ -29,7 +29,7 @@
 
 1. You must use [public API](https://rickandmortyapi.com/documentation/#rest) (you should use REST API).
 2. All data from the public API should be fetched once, and only once, when the Application context is created
-
+    
 ### Tech Requirements
 
 - Use MySQL DB in your app.

@@ -18,9 +18,6 @@ public class CharacterServiceImpl implements CharacterService {
     @Override
     public CharacterDto getRandomCharacter() {
         List<Character> characters = characterRepository.findAll();
-        if (characters.isEmpty()) {
-            return null;
-        }
         Random random = new Random();
         return characterMapper
                 .toDo(characters.get(random.nextInt(characters.size())));
