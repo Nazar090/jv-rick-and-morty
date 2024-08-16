@@ -25,29 +25,35 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(URL))
-                .build();
-        HttpResponse<String> response = httpClient
-                .send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-        JSONObject jsonResponse = new JSONObject(response.body());
-        JSONArray resultsArray = jsonResponse.getJSONArray("results");
+        String nextPageUrl = URL;
 
         List<Character> characters = new ArrayList<>();
+        while (nextPageUrl != null) {
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(nextPageUrl))
+                    .build();
+            HttpResponse<String> response = httpClient
+                    .send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        for (int i = 0; i < resultsArray.length(); i++) {
-            JSONObject characterJson = resultsArray.getJSONObject(i);
+            JSONObject jsonResponse = new JSONObject(response.body());
+            JSONArray resultsArray = jsonResponse.getJSONArray("results");
 
-            Character character = new Character();
-            character.setExternalId(String.valueOf(characterJson.getInt("id")));
-            character.setName(characterJson.getString("name"));
-            character.setStatus(characterJson.getString("status"));
-            character.setGender(characterJson.getString("gender"));
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject characterJson = resultsArray.getJSONObject(i);
 
-            characters.add(character);
+                Character character = new Character();
+                character.setExternalId(String.valueOf(characterJson.getInt("id")));
+                character.setName(characterJson.getString("name"));
+                character.setStatus(characterJson.getString("status"));
+                character.setGender(characterJson.getString("gender"));
+
+                characters.add(character);
+            }
+
+            nextPageUrl =
+                    jsonResponse.isNull("next") ?
+                            null : jsonResponse.getJSONObject("info").getString("next");
         }
         characterRepository.saveAll(characters);
     }
