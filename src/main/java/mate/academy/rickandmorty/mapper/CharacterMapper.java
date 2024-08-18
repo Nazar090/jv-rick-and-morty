@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(config = MapperConfig.class)
 public interface CharacterMapper {
-    CharacterDto toDo(Character character);
+    CharacterDto toDto(Character character);
 }

@@ -14,19 +14,19 @@ import org.springframework.stereotype.Service;
 public class CharacterServiceImpl implements CharacterService {
     private final CharacterRepository characterRepository;
     private final CharacterMapper characterMapper;
+    private static final Random random = new Random();
 
     @Override
     public CharacterDto getRandomCharacter() {
         List<Character> characters = characterRepository.findAll();
-        Random random = new Random();
         return characterMapper
-                .toDo(characters.get(random.nextInt(characters.size())));
+                .toDto(characters.get(random.nextInt(characters.size())));
     }
 
     @Override
     public List<CharacterDto> searchCharacters(String name) {
         return characterRepository.findByNameContaining(name).stream()
-                .map(characterMapper::toDo)
+                .map(characterMapper::toDto)
                 .toList();
     }
 }
